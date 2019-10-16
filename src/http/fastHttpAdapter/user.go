@@ -46,7 +46,7 @@ func registerUser(ctx *fasthttp.RequestCtx){
 
 
 func getUser(ctx *fasthttp.RequestCtx){
-	
+	ctx.Response.Header.Set("Access-Control-Allow-Methods", "GET")
 	email := fmt.Sprintf("%v", ctx.UserValue("email")) 
 	var user model.User
 	user = dataBase.GetUser(email);
@@ -77,7 +77,6 @@ func deleteUser(ctx *fasthttp.RequestCtx){
 }
 
 func updateUser(ctx *fasthttp.RequestCtx){
-	
 	var updatedObject model.User
 	decoder := json.NewDecoder(strings.NewReader(string(ctx.PostBody())))
 	 decoder.Decode(&updatedObject)
@@ -100,17 +99,39 @@ func updateUser(ctx *fasthttp.RequestCtx){
 }
 
 
+
+func CORS(next fasthttp.RequestHandler) fasthttp.RequestHandler {
+	return func(ctx *fasthttp.RequestCtx) {
+
+		// ctx.Response.Header.Set("Access-Control-Allow-Credentials", corsAllowCredentials)
+		// ctx.Response.Header.Set("Access-Control-Allow-Headers", "authorization")
+		ctx.Response.Header.Set("Access-Control-Allow-Methods", "HEAD,GET,POST,PUT,DELETE,OPTIONS")
+		ctx.Response.Header.Set("Access-Control-Allow-Origin", "*")
+
+		next(ctx)
+	}
+}
+
+
+
+
 func HandleRequests (){
 	
-	
+
 	
 	myRouter := fasthttprouter.New()
+
 	
+			
 	myRouter.GET("/users", listUsers)
 	myRouter.POST("/users", registerUser)
 	myRouter.GET("/users/:email", getUser)
 	myRouter.DELETE("/users/:email", deleteUser)
 	myRouter.PUT("/users/:email", updateUser)
-	
-	log.Fatal(fasthttp.ListenAndServe(":8080", myRouter.Handler))
+
+
+	if err := fasthttp.ListenAndServe(":8181", CORS(myRouter.Handler)); err != nil {
+        log.Fatalf("Error in ListenAndServe: %s", err)
+    }
+
 }
