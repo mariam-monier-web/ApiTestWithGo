@@ -2,8 +2,9 @@ package fastHttpAdapter
 
 import (
 	"github.com/valyala/fasthttp" 
-	// "log"
+	"github.com/buaazp/fasthttprouter"
 	"encoding/json"
+	"log"
 	
 	
 )
@@ -16,23 +17,42 @@ func JSONResponse(ctx *fasthttp.RequestCtx, code int, output interface{}) {
 	ctx.SetContentType("application/json")
 	// Our response code
 	ctx.SetStatusCode(code)
-	ctx.Response.Header.Set("Access-Control-Allow-Origin", "*")
 	ctx.Write(response)
 }
 
 
-//  func RequestHandler(ctx *fasthttp.RequestCtx) {
+func CORS(next fasthttp.RequestHandler) fasthttp.RequestHandler {
+	return func(ctx *fasthttp.RequestCtx) {
+
+		// ctx.Response.Header.Set("Access-Control-Allow-Credentials", corsAllowCredentials)
+		// ctx.Response.Header.Set("Access-Control-Allow-Headers", "authorization")
+		ctx.Response.Header.Set("Access-Control-Allow-Methods", "HEAD,GET,POST,PUT,DELETE,OPTIONS")
+		ctx.Response.Header.Set("Access-Control-Allow-Origin", "*")
+
+		next(ctx)
+	}
+}
+
+
+
+
+
+
+
+
+
+func StartServer (){
+
+	myRouter := fasthttprouter.New()
+	HandleRequests(myRouter)
 	
+	if err := fasthttp.ListenAndServe(":8181", CORS(myRouter.Handler)); err != nil {
+        log.Fatalf("Error in ListenAndServe: %s", err)
+    }
 
-// 		ctx.Response.Header.Set("Access-Control-Allow-Origin", "*")
-// 		ctx.Response.Header.Set("Access-Control-Allow-Methods", "GET")
-// 		// ctx.Response.Header.Set("Access-Control-Max-Age", "0")
-// 		// ctx.Response.Header.Set("Cache-Control", "no-cache, no-store, must-revalidate")
-// 		// ctx.Response.Header.Set("Pragma", "no-cache")
-// 		// ctx.Response.Header.Set("Expires", "Wed, 21 Oct 2015 07:28:00 GMT")
+}
 
-		
-// }
+
 
 
 

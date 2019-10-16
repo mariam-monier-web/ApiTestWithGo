@@ -12,7 +12,7 @@ import (
 
 func main (){
 	// muxAdapter.HandleRequests()
-	fastHttpAdapter.HandleRequests()
+	fastHttpAdapter.StartServer()
 	
 	
 }

@@ -5,7 +5,6 @@ import (
 	"dataBase"
 	"github.com/valyala/fasthttp" 
 	"github.com/buaazp/fasthttprouter"
-	"log"
 	"encoding/json"
 	"fmt"
 	"strings"
@@ -100,38 +99,18 @@ func updateUser(ctx *fasthttp.RequestCtx){
 
 
 
-func CORS(next fasthttp.RequestHandler) fasthttp.RequestHandler {
-	return func(ctx *fasthttp.RequestCtx) {
-
-		// ctx.Response.Header.Set("Access-Control-Allow-Credentials", corsAllowCredentials)
-		// ctx.Response.Header.Set("Access-Control-Allow-Headers", "authorization")
-		ctx.Response.Header.Set("Access-Control-Allow-Methods", "HEAD,GET,POST,PUT,DELETE,OPTIONS")
-		ctx.Response.Header.Set("Access-Control-Allow-Origin", "*")
-
-		next(ctx)
-	}
-}
 
 
 
 
-func HandleRequests (){
+
+func HandleRequests (myRouter *fasthttprouter.Router){
 	
-
 	
-	myRouter := fasthttprouter.New()
-
-	
-			
 	myRouter.GET("/users", listUsers)
 	myRouter.POST("/users", registerUser)
 	myRouter.GET("/users/:email", getUser)
 	myRouter.DELETE("/users/:email", deleteUser)
 	myRouter.PUT("/users/:email", updateUser)
-
-
-	if err := fasthttp.ListenAndServe(":8181", CORS(myRouter.Handler)); err != nil {
-        log.Fatalf("Error in ListenAndServe: %s", err)
-    }
 
 }
