@@ -104,7 +104,7 @@ func updateUser(ctx *fasthttp.RequestCtx){
 
 
 
-func HandleRequests (myRouter *fasthttprouter.Router){
+func HandleUserRequests (myRouter *fasthttprouter.Router){
 	
 	
 	myRouter.GET("/users", listUsers)

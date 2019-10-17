@@ -44,7 +44,8 @@ func CORS(next fasthttp.RequestHandler) fasthttp.RequestHandler {
 func StartServer (){
 
 	myRouter := fasthttprouter.New()
-	HandleRequests(myRouter)
+	HandleUserRequests(myRouter)
+	HandleProductRequests(myRouter)
 	
 	if err := fasthttp.ListenAndServe(":8181", CORS(myRouter.Handler)); err != nil {
         log.Fatalf("Error in ListenAndServe: %s", err)
