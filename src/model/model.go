@@ -45,7 +45,7 @@ type ListResponse struct {
 
 	Message string
 	TotalCount int
-	Results []User  
+	Results interface{}
 
 }
 
